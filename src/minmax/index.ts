@@ -20,18 +20,13 @@ export const parseInput = (lines: string[]) => {
 };
 
 if (require.main) {
-  const ll = require("lazylines");
-  process.stdin.resume();
-  var input = new ll.LineReadStream(process.stdin);
+  const rl = require("readline").createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false,
+  });
 
   const lines: string[] = [];
-  input.on("line", function(line: string) { 
-    lines.push(line.replace("\n", ""));
-  });
-
-  input.on("end", function() {
-    // console.log("done");
-    // console.log(JSON.stringify(lines, null, 4));
-    parseInput(lines);
-  });
+  rl.on("line", (line: string) => lines.push(line));
+  rl.once("close", () => parseInput(lines));
 }
