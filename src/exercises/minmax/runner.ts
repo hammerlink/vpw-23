@@ -1,4 +1,4 @@
-import { parseInput } from ".";
+import { parseInput } from "./index";
 
 const fs = require("fs");
 const path = require("path");

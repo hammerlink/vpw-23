@@ -4,7 +4,7 @@
   "description": "Shared repository for team panic!() VPW 2023",
   "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node esbuild.mjs"
   },
   "repository": {
     "type": "git",
