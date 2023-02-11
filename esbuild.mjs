@@ -9,7 +9,7 @@ async function buildDir(dir) {
     for (let i = 0; i < entries.length; i++) {
         const entryDir = join(dir, entries[i]);
         if (statSync(entryDir).isDirectory()) await buildDir(entryDir);
-        if (entryDir.endsWith('.ts')) {
+        if (entryDir.endsWith('.ts') && !entryDir.endsWith('.spec.ts')) {
             await esbuild.build({
                 entryPoints: [entryDir],
                 bundle: true,
