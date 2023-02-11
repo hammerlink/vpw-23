@@ -1,0 +1,19 @@
+{
+  "name": "vpw-23",
+  "version": "1.0.0",
+  "description": "Shared repository for team panic!() VPW 2023",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hammerlink/vpw-23.git"
+  },
+  "author": "hendrik.hamerlinck@hammernet.be",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hammerlink/vpw-23/issues"
+  },
+  "homepage": "https://github.com/hammerlink/vpw-23#readme"
+}
