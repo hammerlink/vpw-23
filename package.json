@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/hammerlink/vpw-23#readme",
   "devDependencies": {
+    "@types/mocha": "^10.0.1",
     "@types/node": "^16.18.12",
     "esbuild": "^0.17.7",
     "mocha": "^10.2.0",
