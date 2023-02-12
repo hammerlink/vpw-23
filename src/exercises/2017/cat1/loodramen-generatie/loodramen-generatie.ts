@@ -26,14 +26,14 @@ interface CutPosition {
     cutIndex?: number;
 }
 
-function printLoodRaamMap(map: BasicMap<CutPosition>, testNumber: number) {
+function printLoodRaamMap(map: BasicMap<CutPosition>, testNumber: number, logger: (line: string) => void) {
     for (let y = map.minY; y <= map.maxY; y++) {
         let line = `${testNumber} `;
         for (let x = map.minX; x <= map.maxX; x++) {
             const value = MapEngine.getPoint(map, x, y)?.value.cutIndex;
             line += `${value !== undefined ? '*' : '.'}`;
         }
-        console.log(line.replace(/\s$/, ''));
+        logger(line.replace(/\s$/, ''));
     }
 }
 
@@ -58,7 +58,7 @@ const handler = (testNumber: number): TestCaseHandler => {
     let hasBoundaries = false;
     const map: BasicMap<CutPosition> = MapEngine.newMap<CutPosition>();
     let crossPoints: CrossPoint[] | null = null;
-    const lineHandler = (line: string) => {
+    const lineHandler = (line: string, logger: (line: string) => void) => {
         if (!hasBoundaries) {
             const values = lineToNumbers(line);
             assert(values.length === 2, `first line is not correct, ${line}`);
@@ -68,7 +68,7 @@ const handler = (testNumber: number): TestCaseHandler => {
         }
         crossPoints = lineToCrossPoints(line);
         crossPoints.forEach((crossPoint, cutIndex) => drawCrossPoint(map, crossPoint, cutIndex));
-        printLoodRaamMap(map, testNumber);
+        printLoodRaamMap(map, testNumber, logger);
         finished = true;
     };
     const isDone = () => finished;

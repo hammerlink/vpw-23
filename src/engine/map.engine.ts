@@ -86,7 +86,7 @@ export namespace MapEngine {
         return map[x][y];
     }
 
-    export function getPointOrDefault<T>(map: BasicMap<T>, x: number, y: number, defaultValue: T): MapLocation<T> | null {
+    export function getPointOrDefault<T>(map: BasicMap<T>, x: number, y: number, defaultValue: T): MapLocation<T> {
         let point = getPoint(map, x, y);
         if (point !== null) return point;
         return setPointInMap(map, x, y, defaultValue);

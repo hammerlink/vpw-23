@@ -17,13 +17,13 @@ const boekenKastHandler = (testNumber: number): TestCaseHandler => {
     const boeken: Boek[] = [];
     let finished = false;
 
-    const lineHandler = (line: string) => {
+    const lineHandler = (line: string, logger: (line: string) => void) => {
         if (rekken === null) return rekken = boekenRekkenParser(line);
         if (boekenCount === null) {
             boekenCount = parseInt(line, 10);
             if (boekenCount === 0) {
                 finished = true;
-                return console.log(`${testNumber} 0`);
+                return logger(`${testNumber} 0`);
             }
             return;
         }
@@ -32,7 +32,7 @@ const boekenKastHandler = (testNumber: number): TestCaseHandler => {
         if (boeken.length === boekenCount) {
             orderBooks(boeken);
             orderRekken(rekken);
-            fillRekken(boeken, rekken, testNumber);
+            fillRekken(boeken, rekken, testNumber, logger);
             finished = true;
         }
     };
@@ -58,7 +58,7 @@ const orderBooks = (books: Boek[]) => {
         return 0;
     })
 };
-const printOnmogelijk = (testNumber: number) => console.log(`${testNumber} ONMOGELIJK`);
+const printOnmogelijk = (testNumber: number, logger: (line: string) => void) => logger(`${testNumber} ONMOGELIJK`);
 const tryFitInRek = (book: Boek, rek: BoekenRek): boolean => {
     const remainingSpace = rek.breedte - (rek.filledBreedte ?? 0);
     if (remainingSpace >= book.dikte) {
@@ -67,10 +67,9 @@ const tryFitInRek = (book: Boek, rek: BoekenRek): boolean => {
     }
     return false;
 }
-const fillRekken = (books: Boek[], rekken: BoekenRek[], testNumber: number) => {
+const fillRekken = (books: Boek[], rekken: BoekenRek[], testNumber: number, logger: (line: string) => void) => {
     try {
-        if (!books.length) return `${testNumber} 0`;
-        if (books.length && !rekken.length) return printOnmogelijk(testNumber);
+        if (books.length && !rekken.length) return printOnmogelijk(testNumber, logger);
         let rekIndex = 0;
         let rek = rekken[rekIndex];
         for (let i = 0; i < books.length; i++) {
@@ -78,15 +77,15 @@ const fillRekken = (books: Boek[], rekken: BoekenRek[], testNumber: number) => {
             const fitsInCurrent = tryFitInRek(book, rek);
             if (!fitsInCurrent) {
                 rekIndex++;
-                if (rekIndex >= rekken.length) return printOnmogelijk(testNumber);
+                if (rekIndex >= rekken.length) return printOnmogelijk(testNumber, logger);
                 rek = rekken[rekIndex];
                 const fitsInNext = tryFitInRek(book, rek);
-                if (!fitsInNext) return printOnmogelijk(testNumber);
+                if (!fitsInNext) return printOnmogelijk(testNumber, logger);
             }
         }
-        console.log(`${testNumber} ${rekIndex + 1}`);
+        logger(`${testNumber} ${rekIndex + 1}`);
     } catch (e) {
-        printOnmogelijk(testNumber);
+        printOnmogelijk(testNumber, logger);
         console.error(e);
     }
 }

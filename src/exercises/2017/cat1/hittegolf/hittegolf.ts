@@ -4,11 +4,11 @@ import {dirname, join} from 'path';
 const handler = (testNumber: number): TestCaseHandler => {
     let finished = false;
     const dayTemperatures: number[] = [];
-    const lineHandler = (line: string) => {
+    const lineHandler = (line: string, logger: (line: string) => void) => {
         if (line === 'stop') {
             const heatWaveIndex = hasHeatWave(dayTemperatures);
-            if (heatWaveIndex === null) console.log(`${testNumber} geen hittegolf`);
-            else console.log(`${testNumber} ${heatWaveIndex[0]} ${heatWaveIndex[1]}`);
+            if (heatWaveIndex === null) logger(`${testNumber} geen hittegolf`);
+            else logger(`${testNumber} ${heatWaveIndex[0]} ${heatWaveIndex[1]}`);
             finished = true;
             return;
         }

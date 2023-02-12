@@ -1,6 +1,6 @@
 import {loodramenGeneratieHandler} from './loodramen-generatie';
 import {dirname, join} from 'path';
-import {readInputByTestCase} from '../../../../engine/input.engine';
+import {readInputByTestCase, readOutput} from '../../../../engine/input.engine';
 import assert from 'assert';
 
 describe('loodramen generatie', function() {
@@ -8,13 +8,14 @@ describe('loodramen generatie', function() {
        const handler = loodramenGeneratieHandler;
        const exampleInputPath = join(dirname(__filename), 'opgave.invoer');
        await readInputByTestCase(handler, exampleInputPath);
-       assert.equal(true, true);
    });
 
    it('should run the example', async function() {
        const handler = loodramenGeneratieHandler;
        const exampleInputPath = join(dirname(__filename), 'voorbeeld.invoer');
-       await readInputByTestCase(handler, exampleInputPath);
-       assert.equal(true, true);
+       const programOutput = await readInputByTestCase(handler, exampleInputPath);
+       const actualOutput = readOutput(join(dirname(__filename), 'voorbeeld.uitvoer'));
+       assert.equal(programOutput.length, actualOutput.length);
+       for (let i = 0; i < programOutput.length; i++) assert.equal(programOutput[i], actualOutput[i]);
    });
 });
