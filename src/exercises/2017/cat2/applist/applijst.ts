@@ -12,8 +12,8 @@ function swapPositions(appList: number[], i1: number, i2: number): boolean {
     return true;
 }
 
-function getRequiredSwipesForAppCall(app: number, appList: number[], appsPerScreen: number): number {
-    return Math.floor(appList.indexOf(app) / appsPerScreen);
+function getRequiredSwipesForAppCall(appIndex: number, appsPerScreen: number): number {
+    return Math.floor(appIndex / appsPerScreen);
 }
 
 function calculateSwipes(appList: number[], appsPerScreen: number, appCalls: number[]): number {
@@ -22,7 +22,7 @@ function calculateSwipes(appList: number[], appsPerScreen: number, appCalls: num
         const app = appList.find(x => x === appIndex);
         const currentIndex = appList.indexOf(app);
 
-        swipes += getRequiredSwipesForAppCall(app, appList, appsPerScreen);
+        swipes += getRequiredSwipesForAppCall(currentIndex, appsPerScreen);
 
         swapPositions(appList, currentIndex, currentIndex - 1); // execute app call
     })
