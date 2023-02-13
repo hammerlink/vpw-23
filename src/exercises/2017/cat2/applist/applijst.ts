@@ -13,13 +13,7 @@ function swapPositions(appList: number[], i1: number, i2: number): boolean {
 }
 
 function getRequiredSwipesForAppCall(app: number, appList: number[], appsPerScreen: number): number {
-    let index = appList.indexOf(app);
-    let swipes = 0;
-    while (index >= appsPerScreen) {
-        index -= appsPerScreen;
-        swipes++;
-    }
-    return swipes;
+    return Math.floor(appList.indexOf(app) / appsPerScreen);
 }
 
 function calculateSwipes(appList: number[], appsPerScreen: number, appCalls: number[]): number {
