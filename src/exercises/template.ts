@@ -9,6 +9,7 @@ const handler = (testNumber: number): TestCaseHandler => {
     const isDone = () => finished;
     return {lineHandler, isDone};
 };
+export const templateHandler = handler;
 
 if (require.main) {
     let fileName = undefined;
