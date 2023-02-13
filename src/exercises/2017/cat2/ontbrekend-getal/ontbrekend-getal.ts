@@ -1,5 +1,5 @@
 import {dirname, join} from 'path';
-import {readInputByTestCase, TestCaseHandler} from '../../../../engine/input.engine';
+import {readInputByTestCase, TestCaseHandler} from '@engine/input.engine';
 
 function lineContainsSequentialNumbers(line: string, decimalNumberCount: number, testNumber: number): number | -1 | null {
     if (decimalNumberCount >= line.length) return -1;

@@ -1,7 +1,7 @@
 import { dirname, join } from 'path';
 import assert from 'assert';
 import {loodRamenAnalyseHandler} from './loodramen-analyse';
-import {readInputByTestCase, readOutput} from '../../../../engine/input.engine';
+import {readInputByTestCase, readOutput} from '@engine/input.engine';
 
 describe('loodRamenAnalyseHandler', function () {
     const handler = loodRamenAnalyseHandler;

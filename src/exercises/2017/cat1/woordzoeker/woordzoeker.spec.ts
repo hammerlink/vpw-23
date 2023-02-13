@@ -1,7 +1,7 @@
 import { dirname, join } from 'path';
 import assert from 'assert';
 import { woordZoekerHandler } from './woordzoeker';
-import { readInputByTestCase, readOutput } from '../../../../engine/input.engine';
+import { readInputByTestCase, readOutput } from '@engine/input.engine';
 
 describe('PLACEHOLDER', function () {
     const handler = woordZoekerHandler;

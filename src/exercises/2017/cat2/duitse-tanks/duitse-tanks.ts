@@ -1,5 +1,5 @@
 import {dirname, join} from 'path';
-import {readInputByTestCase, TestCaseHandler} from '../../../../engine/input.engine';
+import {readInputByTestCase, TestCaseHandler} from '@engine/input.engine';
 
 interface Tank {
     id: number;

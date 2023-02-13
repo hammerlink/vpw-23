@@ -1,6 +1,6 @@
 import { hitteGolfHandler } from './hittegolf';
 import { dirname, join } from 'path';
-import { readInputByTestCase, readOutput } from '../../../../engine/input.engine';
+import { readInputByTestCase, readOutput } from '@engine/input.engine';
 import assert from 'assert';
 
 describe('hittegolf', function () {

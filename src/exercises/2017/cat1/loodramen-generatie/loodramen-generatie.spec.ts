@@ -1,6 +1,6 @@
 import { loodramenGeneratieHandler } from './loodramen-generatie';
 import { dirname, join } from 'path';
-import { readInputByTestCase, readOutput } from '../../../../engine/input.engine';
+import { readInputByTestCase, readOutput } from '@engine/input.engine';
 import assert from 'assert';
 
 describe('loodramen generatie', function () {

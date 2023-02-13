@@ -1,7 +1,7 @@
 import { dirname, join } from 'path';
-import { readInputByTestCase, TestCaseHandler } from '../../../../engine/input.engine';
+import { readInputByTestCase, TestCaseHandler } from '@engine/input.engine';
 import assert from 'assert';
-import { BasicMap, MapEngine } from '../../../../engine/map.engine';
+import { BasicMap, MapEngine } from '@engine/map.engine';
 
 interface CrossPoint {
     y: number;

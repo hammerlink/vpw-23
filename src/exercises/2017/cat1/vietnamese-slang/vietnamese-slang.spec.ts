@@ -1,7 +1,7 @@
 import { dirname, join } from 'path';
 import assert from 'assert';
 import { getParametersFromRawSnake, trySlang, vietnameseSlangHandler } from './vietnamese-slang';
-import { readInputByTestCase, readOutput } from '../../../../engine/input.engine';
+import { readInputByTestCase, readOutput } from '@engine/input.engine';
 
 describe('vietnameseSlangHandler', function () {
     const handler = vietnameseSlangHandler;

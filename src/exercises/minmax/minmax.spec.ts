@@ -1,6 +1,6 @@
 import { dirname, join } from 'path';
 import { minMaxHandler } from './minmax';
-import { readInputByTestCase, readOutput } from '../../engine/input.engine';
+import { readInputByTestCase, readOutput } from '@engine/input.engine';
 import assert from 'assert';
 
 describe('minmax', function () {

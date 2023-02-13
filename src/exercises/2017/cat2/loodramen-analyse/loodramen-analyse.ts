@@ -1,7 +1,7 @@
 import {dirname, join} from 'path';
-import {readInputByTestCase, TestCaseHandler} from '../../../../engine/input.engine';
-import {BasicMap, Boundaries, MapEngine, MapLocation} from '../../../../engine/map.engine';
-import {lineToNumbers} from '../../../../engine/line-input.engine';
+import {readInputByTestCase, TestCaseHandler} from '@engine/input.engine';
+import {BasicMap, Boundaries, MapEngine, MapLocation} from '@engine/map.engine';
+import {lineToNumbers} from '@engine/line-input.engine';
 import assert from 'assert';
 
 interface Cell {

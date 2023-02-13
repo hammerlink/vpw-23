@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { readInputByTestCase, TestCaseHandler } from '../../../../engine/input.engine';
+import { readInputByTestCase, TestCaseHandler } from '@engine/input.engine';
 
 interface BoekenRek {
     breedte: number;

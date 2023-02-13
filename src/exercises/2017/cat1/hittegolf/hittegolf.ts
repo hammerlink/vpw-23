@@ -1,4 +1,4 @@
-import { readInputByTestCase, TestCaseHandler } from '../../../../engine/input.engine';
+import { readInputByTestCase, TestCaseHandler } from '@engine/input.engine';
 import { dirname, join } from 'path';
 
 const handler = (testNumber: number): TestCaseHandler => {

@@ -1,5 +1,5 @@
 import {dirname, join} from 'path';
-import {readInputByTestCase, TestCaseHandler} from '../../../../engine/input.engine';
+import {readInputByTestCase, TestCaseHandler} from '@engine/input.engine';
 import assert from 'assert';
 
 interface Card {

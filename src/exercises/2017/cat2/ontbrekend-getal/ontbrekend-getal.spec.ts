@@ -1,7 +1,7 @@
 import { dirname, join } from 'path';
 import assert from 'assert';
 import {ontbrekendGetalHandler} from './ontbrekend-getal';
-import {readInputByTestCase, readOutput} from '../../../../engine/input.engine';
+import {readInputByTestCase, readOutput} from '@engine/input.engine';
 
 describe('ontbrekendGetalHandler', function () {
     const handler = ontbrekendGetalHandler;
