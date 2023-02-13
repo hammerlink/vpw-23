@@ -5,6 +5,7 @@ const handler = (testNumber: number): TestCaseHandler => {
     let finished = false;
     const lineHandler = (line: string, logger: (line: string) => void) => {
 
+        finished = true;
     };
     const isDone = () => finished;
     return {lineHandler, isDone};

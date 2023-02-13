@@ -99,9 +99,13 @@ export namespace MapEngine {
         return map[x][y][z];
     }
 
-    export function iterateMap<T>(map: BasicMap<T>, iterateFunction: (location: MapLocation<T>) => any) {
+    export function iterateMap<T>(map: BasicMap<T>, iterateFunction: (location: MapLocation<T>, stopIteration: () => void ) => any) {
+        let isBreak = false;
         for (let y = map.minY; y <= map.maxY; y++) {
-            for (let x = map.minX; x <= map.maxX; x++) iterateFunction(getPoint(map, x, y));
+            for (let x = map.minX; x <= map.maxX; x++) {
+                iterateFunction(getPoint(map, x, y), () => isBreak = true);
+                if (isBreak) return;
+            }
         }
     }
 
@@ -137,7 +141,7 @@ export namespace MapEngine {
         return index;
     }
 
-    export function getAdjacentPoints<T>(map: BasicMap<T>, x: number, y: number): MapLocation<T>[] {
+    export function getAdjacentPoints<T>(map: BasicMap<T>, x: number, y: number): Array<MapLocation<T> | null> {
         return [
             getPoint(map, x - 1, y - 1),
             getPoint(map, x - 1, y),
