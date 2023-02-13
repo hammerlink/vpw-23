@@ -20,6 +20,7 @@ function calculateSwipes(appList: number[], appsPerScreen: number, appCalls: num
     let swipes = 0;
     appCalls.forEach(appIndex => {
         const app = appList.find(x => x === appIndex);
+        if (app === undefined) return;
         const currentIndex = appList.indexOf(app);
 
         swipes += getRequiredSwipesForAppCall(currentIndex, appsPerScreen);

@@ -48,7 +48,7 @@ const boekenRekkenParser = (line: string): BoekenRek[] => {
 
 const boekenParser = (line: string): Boek => {
     const match = line.match(/(\d+) (.*)/);
-    assert.equal(!!match, true, `no book match found: ${line}`);
+    if (match === null) throw new Error(`no book match found: ${line}`);
     return { dikte: parseInt(match[1], 10), naam: match[2] };
 };
 const orderBooks = (books: Boek[]) => {

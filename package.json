@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "rimraf dist && node esbuild.mjs",
+    "tsc:check": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,json,yml,vue}\""
   },
   "repository": {

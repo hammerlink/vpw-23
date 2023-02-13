@@ -74,7 +74,7 @@ export namespace MapEngine {
 
     export function setPointInMap<T>(map: BasicMap<T>, x: number, y: number, value: T): MapLocation<T> {
         if (!map[x]) map[x] = {};
-        if (!map[x][y]) map[x][y] = { x, y, value: null };
+        if (!map[x][y]) map[x][y] = { x, y, value };
         map[x][y].value = value;
         if (map.minX === null || x < map.minX) map.minX = x;
         if (map.maxX === null || x > map.maxX) map.maxX = x;
@@ -92,7 +92,7 @@ export namespace MapEngine {
     ): MapLocation3D<T> {
         if (!map[x]) map[x] = {};
         if (!map[x][y]) map[x][y] = {};
-        if (!map[x][y][z]) map[x][y][z] = { x, y, z, value: null };
+        if (!map[x][y][z]) map[x][y][z] = { x, y, z, value };
         map[x][y][z].value = value;
         if (map.minZ === null || z < map.minZ) map.minZ = z;
         if (map.maxZ === null || z > map.maxZ) map.maxZ = z;
@@ -124,7 +124,7 @@ export namespace MapEngine {
 
     export function iterateMap<T>(
         map: BasicMap<T>,
-        iterateFunction: (location: MapLocation<T>, stopIteration: () => void) => any,
+        iterateFunction: (location: MapLocation<T> | null, stopIteration: () => void) => any,
         boundaries: Boundaries = {minX: map.minX, minY: map.minY, maxX: map.maxX, maxY: map.maxY}
     ) {
         const {minY, minX, maxX, maxY} = boundaries;
@@ -139,7 +139,7 @@ export namespace MapEngine {
 
     export function printMap<T>(
         map: BasicMap<T>,
-        getValue: (location: MapLocation<T>) => string,
+        getValue: (location: MapLocation<T> | null) => string,
         printIndex = false,
         spaces = true,
     ) {
@@ -154,7 +154,7 @@ export namespace MapEngine {
 
     export function printMap3D<T>(
         map: BasicMap3D<T>,
-        getValue: (location: MapLocation3D<T>) => string,
+        getValue: (location: MapLocation3D<T> | null) => string,
         printIndex = false,
     ) {
         const maxLength = `${map.maxY}`.length;
@@ -199,8 +199,8 @@ export namespace MapEngine {
         ];
     }
 
-    export function getAdjacentPoints3D<T>(map: BasicMap3D<T>, x: number, y: number, z: number): MapLocation3D<T>[] {
-        const output: MapLocation3D<T>[] = [];
+    export function getAdjacentPoints3D<T>(map: BasicMap3D<T>, x: number, y: number, z: number): Array<MapLocation3D<T> | null> {
+        const output: Array<MapLocation3D<T> | null> = [];
         for (let dx = -1; dx <= 1; dx++) {
             for (let dy = -1; dy <= 1; dy++) {
                 for (let dz = -1; dz <= 1; dz++) {

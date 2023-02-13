@@ -21,6 +21,7 @@ function findWordInRaster(raster: BasicMap<Cell>, word: String) {
                 );
                 for (let i = 0; i < adjacentCells.length; i++) {
                     const adjacentCell = adjacentCells[i];
+                    if (adjacentCell === null) continue;
                     const xDirection = adjacentCell.x - cell.x;
                     const yDirection = adjacentCell.y - cell.y;
                     result = tryMakeWord(raster, word, [cell, adjacentCell], xDirection, yDirection);

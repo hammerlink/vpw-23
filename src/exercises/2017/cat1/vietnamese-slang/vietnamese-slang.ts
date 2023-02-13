@@ -22,7 +22,7 @@ export function trySlang(slang: string, expectedResult: number): boolean {
 }
 
 export function getParametersFromRawSnake(snake: string): string[] {
-    return snake.match(/([A-I]+)/g).sort();
+    return (snake.match(/([A-I]+)/g) ?? []).sort();
 }
 
 function findAll(
