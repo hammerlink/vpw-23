@@ -4,6 +4,14 @@ export interface MapLocation<T> {
     value: T;
 }
 
+export interface Boundaries {
+    minX: number;
+    maxX: number;
+    minY: number;
+    maxY: number;
+
+}
+
 export interface MapLocation3D<T> extends MapLocation<T> {
     z: number;
 }
@@ -53,6 +61,15 @@ export namespace MapEngine {
             minZ: startZ,
             maxZ: startZ,
         };
+    }
+
+    export function getBoundaries<T>(map: BasicMap<T>): Boundaries {
+        return {
+            minX: map.minX,
+            maxX: map.maxX,
+            minY: map.minY,
+            maxY: map.maxY,
+        }
     }
 
     export function setPointInMap<T>(map: BasicMap<T>, x: number, y: number, value: T): MapLocation<T> {
@@ -108,10 +125,12 @@ export namespace MapEngine {
     export function iterateMap<T>(
         map: BasicMap<T>,
         iterateFunction: (location: MapLocation<T>, stopIteration: () => void) => any,
+        boundaries: Boundaries = {minX: map.minX, minY: map.minY, maxX: map.maxX, maxY: map.maxY}
     ) {
+        const {minY, minX, maxX, maxY} = boundaries;
         let isBreak = false;
-        for (let y = map.minY; y <= map.maxY; y++) {
-            for (let x = map.minX; x <= map.maxX; x++) {
+        for (let y = minY; y <= maxY; y++) {
+            for (let x = minX; x <= maxX; x++) {
                 iterateFunction(getPoint(map, x, y), () => (isBreak = true));
                 if (isBreak) return;
             }
@@ -156,6 +175,15 @@ export namespace MapEngine {
         let index = `${y}`;
         while (index.length < maxLength) index += ' ';
         return index;
+    }
+
+    export function getBaseAdjacentPoints<T>(map: BasicMap<T>, x: number, y: number): Array<MapLocation<T> | null> {
+        return [
+            getPoint(map, x - 1, y),
+            getPoint(map, x, y - 1),
+            getPoint(map, x, y + 1),
+            getPoint(map, x + 1, y),
+        ];
     }
 
     export function getAdjacentPoints<T>(map: BasicMap<T>, x: number, y: number): Array<MapLocation<T> | null> {
