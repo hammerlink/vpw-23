@@ -1,5 +1,5 @@
-import {readInputByTestCase, TestCaseHandler} from '../../../../engine/input.engine';
-import {dirname, join} from 'path';
+import { readInputByTestCase, TestCaseHandler } from '../../../../engine/input.engine';
+import { dirname, join } from 'path';
 
 const handler = (testNumber: number): TestCaseHandler => {
     let finished = false;
@@ -15,7 +15,7 @@ const handler = (testNumber: number): TestCaseHandler => {
         dayTemperatures.push(parseFloat(line));
     };
     const isDone = () => finished;
-    return {lineHandler, isDone};
+    return { lineHandler, isDone };
 };
 export const hitteGolfHandler = handler;
 
@@ -39,7 +39,7 @@ function hasHeatWave(temperatures: number[]): [number, number] | null {
 if (require.main) {
     let fileName = undefined;
     if (process.argv[2]) {
-        const {join, dirname} = require('path');
+        const { join, dirname } = require('path');
         fileName = join(dirname(__filename), process.argv[2]);
     }
     readInputByTestCase(handler, fileName).then(_ => null);

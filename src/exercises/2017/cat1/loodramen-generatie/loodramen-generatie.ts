@@ -1,7 +1,7 @@
-import {dirname, join} from 'path';
-import {readInputByTestCase, TestCaseHandler} from '../../../../engine/input.engine';
+import { dirname, join } from 'path';
+import { readInputByTestCase, TestCaseHandler } from '../../../../engine/input.engine';
 import assert from 'assert';
-import {BasicMap, MapEngine} from '../../../../engine/map.engine';
+import { BasicMap, MapEngine } from '../../../../engine/map.engine';
 
 interface CrossPoint {
     y: number;
@@ -9,16 +9,16 @@ interface CrossPoint {
 }
 
 function lineToNumbers(line: string): number[] {
-    return line.split(" ").map(x => parseInt(x, 10));
+    return line.split(' ').map(x => parseInt(x, 10));
 }
 
 function lineToCrossPoints(line: string): CrossPoint[] {
     const numbers = lineToNumbers(line);
     assert(numbers.length > 0, `invalid line, no numbers in it: ${line}`);
     const count = numbers[0];
-    assert(numbers.length === (count * 2 + 1), `not all numbers are present ${line}`);
+    assert(numbers.length === count * 2 + 1, `not all numbers are present ${line}`);
     const output: CrossPoint[] = [];
-    for (let i = 1; i < numbers.length; i += 2) output.push({y: numbers[i] - 1, x: numbers[i + 1] - 1});
+    for (let i = 1; i < numbers.length; i += 2) output.push({ y: numbers[i] - 1, x: numbers[i + 1] - 1 });
     return output;
 }
 
@@ -39,11 +39,11 @@ function printLoodRaamMap(map: BasicMap<CutPosition>, testNumber: number, logger
 
 function drawCrossPoint(map: BasicMap<CutPosition>, point: CrossPoint, cutIndex: number) {
     const cutPoint = (x: number, y: number): boolean => {
-        const {value} = MapEngine.getPointOrDefault(map, x, y, {});
+        const { value } = MapEngine.getPointOrDefault(map, x, y, {});
         if (value.cutIndex !== undefined && value.cutIndex !== cutIndex) return false;
         value.cutIndex = cutIndex;
         return true;
-    }
+    };
     // check the coordinates of the point
     // start cutting from the point all the way up, all the way down, left, right
 
@@ -64,7 +64,7 @@ const handler = (testNumber: number): TestCaseHandler => {
             assert(values.length === 2, `first line is not correct, ${line}`);
             map.maxX = values[1] - 1;
             map.maxY = values[0] - 1;
-            return hasBoundaries = true;
+            return (hasBoundaries = true);
         }
         crossPoints = lineToCrossPoints(line);
         crossPoints.forEach((crossPoint, cutIndex) => drawCrossPoint(map, crossPoint, cutIndex));
@@ -72,14 +72,14 @@ const handler = (testNumber: number): TestCaseHandler => {
         finished = true;
     };
     const isDone = () => finished;
-    return {lineHandler, isDone};
+    return { lineHandler, isDone };
 };
 export const loodramenGeneratieHandler = handler;
 
 if (require.main) {
     let fileName = undefined;
     if (process.argv[2]) {
-        const {join, dirname} = require('path');
+        const { join, dirname } = require('path');
         fileName = join(dirname(__filename), process.argv[2]);
     }
     readInputByTestCase(handler, fileName).then(_ => null);

@@ -1,8 +1,7 @@
-import {dirname, join} from 'path';
-import {readInputByTestCase, TestCaseHandler} from '../../../../engine/input.engine';
-import {lineToNumbers} from '../../../../engine/line-input.engine';
+import { dirname, join } from 'path';
+import { readInputByTestCase, TestCaseHandler } from '../../../../engine/input.engine';
+import { lineToNumbers } from '../../../../engine/line-input.engine';
 import assert from 'assert';
-
 
 interface SnakeAttempt {
     parameterIndex: number;
@@ -11,8 +10,7 @@ interface SnakeAttempt {
     currentSnake: string;
     assignedParameters: {
         [parameter: string]: number;
-    }
-
+    };
 }
 export function trySlang(slang: string, expectedResult: number): boolean {
     try {
@@ -23,33 +21,53 @@ export function trySlang(slang: string, expectedResult: number): boolean {
     }
 }
 
-
 export function getParametersFromRawSnake(snake: string): string[] {
     return snake.match(/([A-I]+)/g).sort();
 }
 
-function findAll(logger: (line: string) => void, expectedResult: number, snake: string, parameters: string[], values: number[], testNumber: number) {
+function findAll(
+    logger: (line: string) => void,
+    expectedResult: number,
+    snake: string,
+    parameters: string[],
+    values: number[],
+    testNumber: number,
+) {
     assert.equal(parameters.length, values.length, `not matching parameters sizes`);
-    buildSnake(logger, expectedResult, {
-        parameterIndex: 0,
-        usedValueIndices: [],
-        parameters,
-        currentSnake: `${snake}`,
-        assignedParameters: {},
-    }, values, testNumber);
+    buildSnake(
+        logger,
+        expectedResult,
+        {
+            parameterIndex: 0,
+            usedValueIndices: [],
+            parameters,
+            currentSnake: `${snake}`,
+            assignedParameters: {},
+        },
+        values,
+        testNumber,
+    );
 }
 
 function printSnakeAttempt(logger: (line: string) => void, attempt: SnakeAttempt, testNumber: number) {
     let line = `${testNumber}`;
-    Object.keys(attempt.assignedParameters).forEach(parameter => line += ` ${parameter}=${attempt.assignedParameters[parameter]}`);
+    Object.keys(attempt.assignedParameters).forEach(
+        parameter => (line += ` ${parameter}=${attempt.assignedParameters[parameter]}`),
+    );
     logger(line);
 }
 
-function buildSnake(logger: (line: string) => void, expectedResult: number, attempt: SnakeAttempt, values: number[], testNumber: number) {
-    const {usedValueIndices, currentSnake, parameterIndex, parameters} = attempt;
+function buildSnake(
+    logger: (line: string) => void,
+    expectedResult: number,
+    attempt: SnakeAttempt,
+    values: number[],
+    testNumber: number,
+) {
+    const { usedValueIndices, currentSnake, parameterIndex, parameters } = attempt;
     if (parameterIndex > parameters.length - 1) {
         if (trySlang(currentSnake, expectedResult)) printSnakeAttempt(logger, attempt, testNumber);
-        return ;
+        return;
     }
     const parameter = parameters[parameterIndex];
     for (let i = 0; i < values.length; i++) {
@@ -82,21 +100,21 @@ const handler = (testNumber: number): TestCaseHandler => {
         }
         snake = line.replace(/=.*$/, '').replace(/:/g, '/');
         executionPieces = line.split(' ');
-        assert.equal(executionPieces[executionPieces.length - 2], "=");
+        assert.equal(executionPieces[executionPieces.length - 2], '=');
         expectedResult = parseInt(executionPieces[executionPieces.length - 1], 10);
         const params = getParametersFromRawSnake(snake);
         findAll(logger, expectedResult, snake, params, values, testNumber);
         finished = true;
     };
     const isDone = () => finished;
-    return {lineHandler, isDone};
+    return { lineHandler, isDone };
 };
 export const vietnameseSlangHandler = handler;
 
 if (require.main) {
     let fileName = undefined;
     if (process.argv[2]) {
-        const {join, dirname} = require('path');
+        const { join, dirname } = require('path');
         fileName = join(dirname(__filename), process.argv[2]);
     }
     readInputByTestCase(handler, fileName).then(_ => null);
