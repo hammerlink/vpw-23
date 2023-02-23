@@ -51,8 +51,10 @@ const handler = (testNumber: number): TestCaseHandler => {
         function move(startHome: Home, movedTo: Home, visitedHomes: Home[], amountOfMoves: number) {
             movedTo.targetIds?.forEach(
                 value => {
-                    if (value === startHome && amountOfMoves > maxMoves) {
-                        maxMoves = amountOfMoves + 1;
+                    if (value === startHome) {
+                        if(amountOfMoves > maxMoves) {
+                            maxMoves = amountOfMoves + 1;
+                        }
                         if (visitedHomes.length < amountOfHomesInTotal) {
                             //find another home looper to move as much as possible
                             for (const homeId in homes) {
