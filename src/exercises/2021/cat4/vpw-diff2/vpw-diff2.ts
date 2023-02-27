@@ -1,11 +1,7 @@
 import {dirname, join} from 'path';
 import {readInputByTestCase, TestCaseHandler} from '@engine/input.engine';
-import {forEach} from 'lodash';
+import {LineHandler, VPWTestHandler} from '@engine/test.engine';
 
-interface LinePiece {
-    lineIndex: number;
-    value: string;
-}
 interface LineMap {
     [lineIndex: number]: {
         values: string[];
@@ -13,7 +9,10 @@ interface LineMap {
 }
 
 function parseLine(line: string, previousIndex: number | undefined, maxLineIndex: number) {
-    let parsed = line.replace(/^\s+/, '').replace(/\s+$/, '').replace(/\s+/, ' ');
+    let parsed = line
+        .replace(/^\s+/, '')
+        .replace(/\s+$/, '')
+        .replace(/\s+/, ' ');
     const getDigitMatch = parsed.match(/^([0-9]+)\s/);
     if (getDigitMatch === null) return null;
     const lineIndex = parseInt(getDigitMatch[1]);
@@ -27,7 +26,6 @@ function comparePieces(left: LineMap, right: LineMap) {
     const leftLines = Object.keys(left);
     const rightLines = Object.keys(right);
     const matches = leftLines.filter(x => rightLines.includes(x));
-    const total = Math.max(leftLines.length, rightLines.length);
     let matchCount = 0;
     matches.forEach(lineIndex => {
         const leftValues = left[lineIndex as any].values.sort();
@@ -42,59 +40,44 @@ function comparePieces(left: LineMap, right: LineMap) {
 }
 
 const handler = (testNumber: number): TestCaseHandler => {
-    let finished = false;
-    let leftCount: number | undefined;
-    let leftIndex = 0;
+    const vpwHandler = new VPWTestHandler();
     let leftLineIndex: number | undefined;
     const leftPieces: LineMap = {};
-    let rightCount: number | undefined;
-    let rightIndex = 0;
     let rightLineIndex: number | undefined;
     const rightPieces: LineMap = {};
-
-    const lineHandler = (line: string, logger: (line: string) => void) => {
-        if (leftCount === undefined) {
-            leftCount = parseInt(line);
-            if (leftCount > 0) return;
+    const leftHandler = new LineHandler((line: string) => {
+        const parsed = parseLine(line, leftLineIndex, leftHandler.amount as number);
+        if (parsed !== null) {
+            leftLineIndex = parsed.lineIndex;
+            if (!leftPieces[leftLineIndex]) leftPieces[leftLineIndex] = {values: []};
+            const value = parsed.value;
+            leftPieces[leftLineIndex].values.push(value);
         }
-        if (leftCount > 0  && leftIndex < leftCount) {
-            const parsed = parseLine(line, leftLineIndex, leftCount);
-            if (parsed !== null) {
-                leftLineIndex = parsed.lineIndex;
-                if (!leftPieces[leftLineIndex]) leftPieces[leftLineIndex] = {values: []};
-                const value = parsed.value;
-                leftPieces[leftLineIndex].values.push(value);
-            }
-
-            leftIndex++;
-            return;
+    });
+    const rightHandler = new LineHandler((line: string) => {
+        const parsed = parseLine(line, rightLineIndex, leftLineIndex as number);
+        if (parsed !== null) {
+            rightLineIndex = parsed.lineIndex;
+            if (!rightPieces[rightLineIndex]) rightPieces[rightLineIndex] = {values: []};
+            const value = parsed.value;
+            rightPieces[rightLineIndex].values.push(value);
         }
-        if (rightCount === undefined) {
-            rightCount = parseInt(line);
-            if (rightCount > 0) return;
-        }
+    });
 
-        if (rightCount > 0 ) {
-            const parsed = parseLine(line, rightLineIndex, leftLineIndex as number);
-            if (parsed !== null) {
-                rightLineIndex = parsed.lineIndex;
-                if (!rightPieces[rightLineIndex]) rightPieces[rightLineIndex] = {values: []};
-                const value = parsed.value;
-                rightPieces[rightLineIndex].values.push(value);
-            }
-            rightIndex++;
-            if (rightIndex < rightCount) return;
-        }
+    vpwHandler.handlers.push(new LineHandler((line: string) => {
+        leftHandler.amount = parseInt(line);
+    }, 1));
+    vpwHandler.handlers.push(leftHandler);
+    vpwHandler.handlers.push(new LineHandler((line: string) => {
+        rightHandler.amount = parseInt(line);
+    }, 1));
+    vpwHandler.handlers.push(rightHandler);
 
+    vpwHandler.resultHandler = new LineHandler((line: string, logger: (line: string) => void) => {
         const compareMatches = comparePieces(leftPieces, rightPieces);
-
-        logger(`${testNumber} ${compareMatches.matchCount}/${compareMatches.total}`)
-        // handle diff
-        finished = true;
-    };
-
-    const isDone = () => finished;
-    return {lineHandler, isDone};
+        logger(`${testNumber} ${compareMatches.matchCount}/${compareMatches.total}`);
+    });
+    return vpwHandler;
 };
 export const vpwDiffHandler = handler;
 
