@@ -72,6 +72,36 @@ export namespace MapEngine {
         }
     }
 
+
+    export function navOrDefault<T>(map: BasicMap<T>, { x, y }: MapLocation<T>, defaultValue: T, xAmount: number, yAmount: number): MapLocation<T> {
+        return getPointOrDefault(map, x + xAmount, y + yAmount, defaultValue);
+    }
+
+    export function navDownOrDefault<T>(map: BasicMap<T>, { x, y }: MapLocation<T>, defaultValue: T, amount = 1): MapLocation<T> {
+        return getPointOrDefault(map, x, y + amount, defaultValue);
+    }
+    export function navDown<T>(map: BasicMap<T>, { x, y }: MapLocation<T>, amount = 1): MapLocation<T> | null {
+        return getPoint(map, x, y + amount);
+    }
+    export function navUpOrDefault<T>(map: BasicMap<T>, { x, y }: MapLocation<T>, defaultValue: T, amount = 1): MapLocation<T> {
+        return getPointOrDefault(map, x, y - amount, defaultValue);
+    }
+    export function navUp<T>(map: BasicMap<T>, { x, y }: MapLocation<T>, amount = 1): MapLocation<T> | null {
+        return getPoint(map, x, y - amount);
+    }
+    export function navRightOrDefault<T>(map: BasicMap<T>, { x, y }: MapLocation<T>, defaultValue: T, amount = 1): MapLocation<T> {
+        return getPointOrDefault(map, x + amount, y, defaultValue);
+    }
+    export function navRight<T>(map: BasicMap<T>, { x, y }: MapLocation<T>, amount = 1): MapLocation<T> | null {
+        return getPoint(map, x + amount, y);
+    }
+    export function navLeftOrDefault<T>(map: BasicMap<T>, { x, y }: MapLocation<T>, defaultValue: T, amount = 1): MapLocation<T> {
+        return getPointOrDefault(map, x - amount, y, defaultValue);
+    }
+    export function navLeft<T>(map: BasicMap<T>, { x, y }: MapLocation<T>, amount = 1): MapLocation<T> | null {
+        return getPoint(map, x - amount, y);
+    }
+
     export function setPointInMap<T>(map: BasicMap<T>, x: number, y: number, value: T): MapLocation<T> {
         if (!map[x]) map[x] = {};
         if (!map[x][y]) map[x][y] = { x, y, value };
@@ -125,9 +155,9 @@ export namespace MapEngine {
     export function iterateMap<T>(
         map: BasicMap<T>,
         iterateFunction: (location: MapLocation<T> | null, stopIteration: () => void) => any,
-        boundaries: Boundaries = {minX: map.minX, minY: map.minY, maxX: map.maxX, maxY: map.maxY}
+        boundaries: Boundaries = { minX: map.minX, minY: map.minY, maxX: map.maxX, maxY: map.maxY }
     ) {
-        const {minY, minX, maxX, maxY} = boundaries;
+        const { minY, minX, maxX, maxY } = boundaries;
         let isBreak = false;
         for (let y = minY; y <= maxY; y++) {
             for (let x = minX; x <= maxX; x++) {

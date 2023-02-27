@@ -1,7 +1,6 @@
 import {dirname, join} from 'path';
 import {readInputByTestCase, TestCaseHandler} from '@engine/input.engine';
 import {lineToNumbers} from '@engine/line-input.engine';
-import {min} from 'lodash';
 
 interface Kroeg {
     prijs: number;
