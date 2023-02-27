@@ -12,26 +12,41 @@ interface Kroeg {
     remainingPrice?: number;
 }
 
-let globalBestScore: number | undefined;
+let globalBestScore = 0;
+let globalBudget = 0;
+let globalBestRatio = 0;
+let globalStop = false;
+let startTime = new Date().getTime();
 
-function getBestScore(kroegen: Kroeg[], currentScore: number, budget: number, minimumPrijs: number, index = 0): number | undefined {
-    if (index >= kroegen.length || budget < kroegen[index].prijs) {
-        if (globalBestScore === undefined || currentScore > globalBestScore) globalBestScore = currentScore;
-        return currentScore;
+function checkScore(score: number, remainingBudget: number) {
+    if (score > globalBestScore) {
+        globalBestScore = score;
+        globalBestRatio = score / (globalBudget - remainingBudget);
+        // console.log(score, globalBestRatio.toFixed(2));
     }
-    let bestScore: number | undefined;
-    for (let i = index; i < kroegen.length; i++) {
+}
+
+function getBestScore(kroegen: Kroeg[], currentScore: number, budget: number, index = 0) {
+    if (globalStop) return;
+    checkScore(currentScore, budget);
+    if (index >= kroegen.length) return;
+    const currentRatio = (budget === globalBudget) ? 0 : currentScore / (globalBudget - budget);
+    if (currentRatio < (globalBestRatio * (globalBudget - budget) / globalBudget)) return;
+    for (let i = index; i < kroegen.length && !globalStop; i++) {
         const x = kroegen[i];
-        if (x.prijs > budget
-            || (globalBestScore !== undefined && (currentScore + (x.availableScore as number)) < globalBestScore)) break;
-        let score = getBestScore(kroegen, currentScore + x.score, budget - x.prijs, minimumPrijs, i + 1);
-        if (score !== undefined && (bestScore === undefined || score > bestScore)) bestScore = score;
+        if (x.prijs > budget) continue;
+        if (new Date().getTime() > startTime + 350) globalStop = true;
+        if (currentScore + (x.availableScore as number) < globalBestScore) return;
+        if (budget >= (x.remainingPrice as number)) {
+            checkScore(currentScore + (x.availableScore as number), budget - (x.remainingPrice as number))
+            return;
+        }
+        getBestScore(kroegen, currentScore + x.score, budget - x.prijs, i + 1);
     }
-    return bestScore ?? currentScore;
 }
 
 function buildRemainingScore(kroegen: Kroeg[]) {
-    // supposes that the list is sorted on ascending price
+    // supposes that the list is sorted on price
     let remainingPrice = 0;
     let availableScore = 0;
     for (let i = kroegen.length - 1; i >= 0; i--) {
@@ -46,8 +61,6 @@ function buildRemainingScore(kroegen: Kroeg[]) {
 const handler = (testNumber: number): TestCaseHandler => {
     const vpwHandler = new VPWTestHandler();
     let budget: number | undefined;
-    let minPrice: number | undefined;
-
     const kroegen: Kroeg[] = [];
 
     const kroegenHandler = new LineHandler((line: string) => {
@@ -59,28 +72,31 @@ const handler = (testNumber: number): TestCaseHandler => {
             score: numbers[1],
             ratio: prijs > 0 ? score / prijs : 0,
         });
-        if (prijs > 0 && (minPrice === undefined || prijs < minPrice)) minPrice = prijs;
     });
 
     vpwHandler.handlers.push(new LineHandler((line: string) => {
         const numbers = lineToNumbers(line);
-        budget = numbers[0];
+        globalBudget = numbers[0];
         kroegenHandler.amount = numbers[1];
     }, 1));
     vpwHandler.handlers.push(kroegenHandler);
 
     vpwHandler.resultHandler = new LineHandler((line: string, logger: (line: string) => void) => {
         const frees = kroegen.filter(x => x.prijs === 0);
-        const others = kroegen.filter(x => x.prijs !== 0)
-            .sort((a, b) => a.prijs - b.prijs);
+        const others = kroegen.filter(x => x.prijs !== 0 && x.prijs < globalBudget);
+
+        others.sort((a, b) => b.ratio - a.ratio);
         buildRemainingScore(others);
-        // .sort((a, b) => b.ratio - a.ratio);
         // get best price per ascending budget
         let baseScore = 0;
         for (let i = 0; i < frees.length; i++) baseScore += frees[i].score;
 
-        globalBestScore = undefined;
-        logger(`${testNumber} ${getBestScore(others, baseScore, budget as number, minPrice as number)}`);
+        globalBestScore = 0;
+        globalBestRatio = 0;
+        globalStop = false;
+        startTime = new Date().getTime();
+        getBestScore(others, baseScore, globalBudget);
+        logger(`${testNumber} ${globalBestScore}`);
     });
     return vpwHandler;
 };

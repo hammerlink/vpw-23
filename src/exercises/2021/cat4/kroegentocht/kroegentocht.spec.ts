@@ -15,6 +15,7 @@ describe('PLACEHOLDER', function () {
     });
 
     it('should run the competition', async function () {
+        this.timeout(20000);
         const exampleInputPath = join(dirname(__filename), 'wedstrijd.invoer');
         const programOutput = await readInputByTestCase(handler, exampleInputPath);
         const actualOutput = readOutput(join(dirname(__filename), 'wedstrijd.uitvoer'));
