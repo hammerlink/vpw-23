@@ -30,11 +30,11 @@ function getBestScore(kroegen: Kroeg[], currentScore: number, budget: number, in
     if (globalStop) return;
     checkScore(currentScore, budget);
     if (index >= kroegen.length) return;
-    const currentRatio = (budget === globalBudget) ? 0 : currentScore / (globalBudget - budget);
-    if (currentRatio < (globalBestRatio * (globalBudget - budget) / globalBudget)) return;
-    for (let i = index; i < kroegen.length && !globalStop; i++) {
+    for (let i = index; i < kroegen.length && !globalStop; i++) { // should be sorted by ratio asc
         const x = kroegen[i];
         if (x.prijs > budget) continue;
+        const maximumAttainableScore = Math.ceil(currentScore + x.ratio * budget);
+        if (maximumAttainableScore < globalBestScore) return;
         if (new Date().getTime() > startTime + 350) globalStop = true;
         if (currentScore + (x.availableScore as number) < globalBestScore) return;
         if (budget >= (x.remainingPrice as number)) {
